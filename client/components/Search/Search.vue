@@ -57,7 +57,40 @@
                                 </DivBtn>
                             </div>
                         </div>
-                        <div v-show="!isExtendedSearch" class="row q-mx-sm q-mb-xs items-center" style="max-width: 1024px">
+                        <!-- Однострочный поиск: сам определяет, что ввели -->
+                        <div v-show="!isExtendedSearch" class="quick-bar row items-center q-mx-sm q-mb-xs no-wrap">
+                            <q-input
+                                v-model="quickQuery" class="col quick-input" outlined dense clearable
+                                :maxlength="5000" label="Книга, автор или серия"
+                                @update:model-value="onQuickInput"
+                                @keyup.enter="runQuickSearch()"
+                            >
+                                <template #prepend>
+                                    <q-icon name="la la-search" />
+                                </template>
+                                <template v-if="quickBusy" #append>
+                                    <q-icon name="la la-spinner icon-rotate" />
+                                </template>
+                            </q-input>
+
+                            <DivBtn
+                                class="q-ml-sm" :class="{'filters-open': filtersOpen}"
+                                :size="34" :icon-size="20" icon="la la-sliders-h" round
+                                @click.stop.prevent="toggleFilters()"
+                            >
+                                <template #tooltip>
+                                    <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
+                                        Поля поиска: автор, серия, название, язык, жанр
+                                    </q-tooltip>
+                                </template>
+                            </DivBtn>
+                        </div>
+
+                        <div v-show="quickStatus" class="row q-mx-md q-mb-xs items-center text-grey-7" style="font-size: 90%">
+                            {{ quickStatus }}
+                        </div>
+
+                        <div v-show="!isExtendedSearch && filtersOpen" class="row q-mx-sm q-mb-xs items-center" style="max-width: 1024px">
                             <q-input
                                 ref="authorInput" v-model="search.author" :maxlength="5000" :debounce="inputDebounce"
                                 class="q-mt-xs col-3" :bg-color="inputBgColor('author')" style="min-width: 140px" label="Автор" stack-label outlined dense clearable
@@ -111,7 +144,7 @@
                                 </template>
                             </DivBtn>
                         </div>
-                        <div v-show="!isExtendedSearch && extendedParams" class="row q-mx-sm q-mb-xs items-center" style="max-width: 1024px">
+                        <div v-show="!isExtendedSearch && extendedParams && filtersOpen" class="row q-mx-sm q-mb-xs items-center" style="max-width: 1024px">
                             <q-input
                                 v-model="genreNames" :maxlength="inputMaxLength" :debounce="inputDebounce"
                                 class="q-mt-xs col-3" :bg-color="inputBgColor()" input-style="cursor: pointer" style="min-width: 140px;" label="Жанр" stack-label outlined dense clearable readonly
@@ -303,7 +336,7 @@
                 <!-- 2 -->
                 <div class="column">
                     <DivBtn
-                        v-show="!isExtendedSearch && (extendedParams || !extendedParamsMessage)"
+                        v-show="false"
                         class="text-grey-6" :size="16" :icon-size="14"
                         :icon="(extendedParams ? 'la la-angle-double-up' : 'la la-angle-double-down')"
                         no-shadow
@@ -565,6 +598,14 @@ class Search {
     genreTreeInpxHash = '';
     showTooltips = true;
 
+    //quick search (однострочный поиск)
+    quickQuery = '';
+    quickStatus = '';
+    quickBusy = false;
+    quickTimer = null;
+    quickPending = null;
+    filtersOpen = false;
+
     bookInfo = {};
 
     searchDateOptions = [
@@ -577,6 +618,92 @@ class Search {
         {label: 'за 3 месяца', value: '3months'},
         {label: 'выбрать даты', value: 'manual'},
     ];
+
+    //--- quick search --------------------------------------------------------
+    toggleFilters() {
+        this.filtersOpen = !this.filtersOpen;
+        if (this.filtersOpen)
+            this.extendedParams = true;
+    }
+
+    onQuickInput(value) {
+        clearTimeout(this.quickTimer);
+
+        const q = (value || '').trim();
+        if (!q) {
+            this.quickStatus = '';
+            return;
+        }
+
+        this.quickTimer = setTimeout(() => { this.runQuickSearch(q); }, 420);
+    }
+
+    // Ищет введённую строку по очереди как автора, серию и название.
+    // Останавливается на первом непустом результате и переключает вкладку.
+    async runQuickSearch(value) {
+        const q = (value === undefined ? this.quickQuery : value || '').trim();
+        if (!q)
+            return;
+
+        if (this.quickBusy) {
+            this.quickPending = q;
+            return;
+        }
+
+        this.quickBusy = true;
+        this.quickStatus = 'Ищу…';
+
+        try {
+            const base = {limit: this.limit || 20, page: 1, offset: 0, del: '0'};
+            const attempts = [
+                {list: 'author', field: 'author', query: {author: q}},
+                {list: 'series', field: 'series', query: {series: q}},
+                {list: 'title', field: 'title', query: {title: q}},
+            ];
+
+            let hit = null;
+            for (const a of attempts) {
+                let res = null;
+                try {
+                    res = await this.api.search(a.list, Object.assign({}, base, a.query));
+                } catch (e) {
+                    continue;
+                }
+                const total = (res && res.totalFound !== undefined)
+                    ? res.totalFound
+                    : (res && res.found ? res.found.length : 0);
+
+                if (total > 0) {
+                    hit = Object.assign({total}, a);
+                    break;
+                }
+            }
+
+            if (!hit) {
+                this.quickStatus = `Ничего не найдено: «${q}»`;
+                return;
+            }
+
+            this.quickStatus = '';
+
+            if (this.selectedList !== hit.list)
+                this.selectedList = hit.list;
+
+            const s = this.search;
+            s.author = '';
+            s.series = '';
+            s.title = '';
+            s.page = 1;
+            s[hit.field] = q;
+        } finally {
+            this.quickBusy = false;
+            if (this.quickPending) {
+                const next = this.quickPending;
+                this.quickPending = null;
+                this.runQuickSearch(next);
+            }
+        }
+    }
 
     generateDefaults(obj, fields) {
         obj.setDefaults = (self, value = {}) => {

@@ -89,10 +89,13 @@ body[data-theme="dark"] {
 body, html, #app {
     font: 400 14px/1.45 var(--font-ui) !important;
     color: var(--fg);
-    background: var(--bg-0);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
+
+/* фон рисует только body: #app не должен перекрывать градиент сплошным цветом */
+#app { background: transparent !important; }
+body { background-color: var(--bg-0); }
 
 body {
     background:
@@ -155,6 +158,31 @@ a { color: var(--accent); }
 }
 .tool-panel .header div[style*="font-size: 150%"] > .q-mr-xs { color: var(--fg-muted); font-weight: 500; }
 
+/* --- quick search (однострочный поиск) ---------------------------------- */
+.quick-bar {
+    max-width: 1024px;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.quick-input .q-field__control {
+    height: 46px !important;
+    border-radius: var(--radius-md) !important;
+    background: var(--surface) !important;
+    box-shadow: var(--shadow-1);
+}
+.quick-input .q-field__control:before { border: 1px solid var(--border) !important; border-radius: var(--radius-md) !important; }
+.quick-input.q-field--focused .q-field__control:after { border-radius: var(--radius-md) !important; }
+.quick-input .q-field__native { font-size: 15px; font-weight: 500; }
+.quick-input .q-field__label { font-size: 13px; }
+.quick-input .q-field__prepend .q-icon { color: var(--accent); font-size: 18px; }
+
+.filters-open {
+    background: var(--accent-soft) !important;
+    color: var(--accent) !important;
+    border-color: transparent !important;
+}
+
 /* --- segmented tabs ------------------------------------------------------ */
 .q-btn-toggle {
     background: var(--accent-soft) !important;
@@ -188,7 +216,8 @@ a { color: var(--accent); }
     border-radius: var(--radius-sm) !important;
     transition: box-shadow .16s ease, border-color .16s ease;
 }
-.q-field--outlined .q-field__control:before { border: 1px solid var(--border) !important; border-radius: var(--radius-sm) !important; }
+.q-field--outlined .q-field__control:before { border: 1px solid var(--border-strong) !important; border-radius: var(--radius-sm) !important; }
+.q-field--outlined { background: transparent; }
 .q-field--outlined .q-field__control:hover:before { border-color: var(--border-strong) !important; }
 .q-field--outlined.q-field--focused .q-field__control:after {
     border: 1.5px solid var(--accent) !important;
@@ -237,6 +266,21 @@ a { color: var(--accent); }
 /* страница N из M */
 .tool-panel div[style*="130%"], .tool-panel .text-body2 { color: var(--fg-muted); }
 
+/* счётчик результатов */
+.row.items-center.q-ml-lg.q-mt-sm > .text-bold {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-1);
+    color: var(--fg-muted);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
 /* --- list rows ---------------------------------------------------------- */
 .odd-item { background: var(--row-alt) !important; }
 
@@ -268,14 +312,38 @@ a { color: var(--accent); }
 .text-blue-10, .text-blue-8 { color: var(--accent) !important; }
 .text-red, .text-red-10 { color: #f87171 !important; }
 
-/* строки книг */
-.book-row {
+/* строки книг — карточки */
+.book-row { background: transparent; }
+
+div.row.items-center.q-my-sm.no-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    margin: 2px 10px;
-    padding: 4px 8px;
-    transition: background .14s ease;
+    padding: 7px 12px;
+    margin: 4px 0;
+    transition: background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease;
 }
-.book-row:hover { background: var(--row-hover); }
+div.row.items-center.q-my-sm.no-wrap:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-1);
+    transform: translateY(-1px);
+}
+
+/* действия в строке книги: (инфо) (скачать) (читать) и копирование */
+div.row.items-center.q-my-sm.no-wrap .clickable {
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent) !important;
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: background .15s ease, color .15s ease;
+    white-space: nowrap;
+}
+div.row.items-center.q-my-sm.no-wrap .clickable:hover { background: var(--accent); color: var(--accent-fg) !important; }
+div.row.items-center.q-my-sm.no-wrap .clickable .q-icon { font-size: 14px; }
 
 /* иконки-аккордеоны */
 .q-icon.la-plus-square, .q-icon.la-minus-square {
