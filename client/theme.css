@@ -1,0 +1,349 @@
+/* ============================================================================
+   inpx-web · modern glass theme
+   Слой поверх Quasar: меняет только внешний вид, разметку и логику не трогает.
+   Тема: body[data-theme="light"|"dark"]; без атрибута — по prefers-color-scheme.
+   ========================================================================== */
+
+:root {
+    --font-ui: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+               "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    /* light */
+    --bg-0: #d9e2f5;
+    --bg-1: #f1f5fd;
+    --bg-glow-1: rgba(99, 102, 241, 0.55);
+    --bg-glow-2: rgba(14, 165, 233, 0.45);
+    --bg-glow-3: rgba(236, 72, 153, 0.28);
+    --surface: rgba(255, 255, 255, 0.82);
+    --surface-solid: #ffffff;
+    --surface-hover: rgba(255, 255, 255, 0.92);
+    --border: rgba(15, 23, 42, 0.11);
+    --border-strong: rgba(15, 23, 42, 0.18);
+    --fg: #0f172a;
+    --fg-muted: #64748b;
+    --fg-faint: #94a3b8;
+    --accent: #6366f1;
+    --accent-2: #8b5cf6;
+    --accent-fg: #ffffff;
+    --accent-soft: rgba(99, 102, 241, 0.12);
+    --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+    --shadow-2: 0 12px 40px rgba(15, 23, 42, 0.14);
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --row-hover: rgba(99, 102, 241, 0.07);
+    --row-alt: rgba(15, 23, 42, 0.028);
+}
+
+body[data-theme="dark"] {
+    --bg-0: #05070f;
+    --bg-1: #0b1022;
+    --bg-glow-1: rgba(99, 102, 241, 0.55);
+    --bg-glow-2: rgba(14, 165, 233, 0.35);
+    --bg-glow-3: rgba(192, 84, 252, 0.30);
+    --surface: rgba(22, 28, 45, 0.62);
+    --surface-solid: #161c2d;
+    --surface-hover: rgba(34, 42, 64, 0.86);
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --fg: #e8ecf7;
+    --fg-muted: #9aa7bf;
+    --fg-faint: #6b7891;
+    --accent: #818cf8;
+    --accent-2: #c084fc;
+    --accent-fg: #0b1020;
+    --accent-soft: rgba(129, 140, 248, 0.18);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.45);
+    --shadow-2: 0 18px 50px rgba(0, 0, 0, 0.6);
+    --row-hover: rgba(129, 140, 248, 0.12);
+    --row-alt: rgba(255, 255, 255, 0.035);
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+        --bg-0: #05070f;
+        --bg-1: #0b1022;
+        --bg-glow-1: rgba(99, 102, 241, 0.55);
+        --bg-glow-2: rgba(14, 165, 233, 0.35);
+        --bg-glow-3: rgba(192, 84, 252, 0.30);
+        --surface: rgba(22, 28, 45, 0.62);
+        --surface-solid: #161c2d;
+        --surface-hover: rgba(34, 42, 64, 0.86);
+        --border: rgba(255, 255, 255, 0.09);
+        --border-strong: rgba(255, 255, 255, 0.16);
+        --fg: #e8ecf7;
+        --fg-muted: #9aa7bf;
+        --fg-faint: #6b7891;
+        --accent: #818cf8;
+        --accent-2: #c084fc;
+        --accent-fg: #0b1020;
+        --accent-soft: rgba(129, 140, 248, 0.18);
+        --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.45);
+        --shadow-2: 0 18px 50px rgba(0, 0, 0, 0.6);
+        --row-hover: rgba(129, 140, 248, 0.12);
+        --row-alt: rgba(255, 255, 255, 0.035);
+        }
+}
+
+/* --- base ---------------------------------------------------------------- */
+body, html, #app {
+    font: 400 14px/1.45 var(--font-ui) !important;
+    color: var(--fg);
+    background: var(--bg-0);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    background:
+        radial-gradient(1000px 620px at 8% -10%, var(--bg-glow-1), transparent 60%),
+        radial-gradient(820px 560px at 96% 0%, var(--bg-glow-2), transparent 58%),
+        radial-gradient(700px 700px at 70% 110%, var(--bg-glow-3), transparent 62%),
+        linear-gradient(160deg, var(--bg-0), var(--bg-1) 58%, var(--bg-0));
+    background-attachment: fixed;
+}
+
+::-webkit-scrollbar { width: 10px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--fg-faint); background-clip: content-box; }
+
+a { color: var(--accent); }
+
+/* --- glass panel (шапка) -------------------------------------------------- */
+.tool-panel.bg-cyan-2,
+.tool-panel {
+    background: var(--surface) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    backdrop-filter: blur(22px) saturate(160%);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 10px 30px -18px rgba(2, 6, 23, 0.45);
+    padding-bottom: 6px;
+}
+
+.tool-panel .header {
+    padding: 8px 6px 4px;
+    gap: 6px;
+}
+
+/* логотип */
+.tool-panel .header a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px !important;
+    width: 36px !important;
+    border-radius: 12px;
+    background: linear-gradient(145deg, var(--accent), var(--accent-2));
+    box-shadow: 0 6px 18px -6px var(--accent);
+    transition: transform .16s ease, box-shadow .16s ease;
+}
+.tool-panel .header a:hover { transform: translateY(-1px) scale(1.03); }
+.tool-panel .header a img { height: 22px; width: 22px; }
+
+/* «Коллекция …» */
+.tool-panel .header div[style*="font-size: 150%"] {
+    font-size: 15px !important;
+    font-weight: 600;
+    color: var(--fg);
+    letter-spacing: -0.01em;
+}
+.tool-panel .header div[style*="font-size: 150%"] > .q-mr-xs { color: var(--fg-muted); font-weight: 500; }
+
+/* --- segmented tabs ------------------------------------------------------ */
+.q-btn-toggle {
+    background: var(--accent-soft) !important;
+    border-radius: 999px !important;
+    padding: 3px;
+    box-shadow: none !important;
+    gap: 2px;
+}
+.q-btn-toggle .q-btn {
+    border-radius: 999px !important;
+    color: var(--fg-muted) !important;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    min-height: 30px;
+    padding: 0 14px;
+    transition: color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.q-btn-toggle .q-btn--active,
+.q-btn-toggle .q-btn.bg-primary,
+.q-btn-toggle .q-btn.text-primary {
+    background: linear-gradient(140deg, var(--accent), var(--accent-2)) !important;
+    color: var(--accent-fg) !important;
+    box-shadow: 0 4px 14px -4px var(--accent);
+}
+.q-btn-toggle .q-btn:not(.q-btn--active):hover { background: var(--surface-hover) !important; color: var(--fg) !important; }
+
+/* --- inputs ------------------------------------------------------------- */
+.q-field--outlined .q-field__control {
+    background: var(--surface) !important;
+    border-radius: var(--radius-sm) !important;
+    transition: box-shadow .16s ease, border-color .16s ease;
+}
+.q-field--outlined .q-field__control:before { border: 1px solid var(--border) !important; border-radius: var(--radius-sm) !important; }
+.q-field--outlined .q-field__control:hover:before { border-color: var(--border-strong) !important; }
+.q-field--outlined.q-field--focused .q-field__control:after {
+    border: 1.5px solid var(--accent) !important;
+    border-radius: var(--radius-sm) !important;
+}
+.q-field__native, .q-field__input, .q-field__prefix, .q-field__suffix { color: var(--fg) !important; }
+.q-field__label { color: var(--fg-muted) !important; font-size: 12px; letter-spacing: 0.02em; }
+.q-field--focused .q-field__label { color: var(--accent) !important; }
+.q-field__bottom { color: var(--fg-muted) !important; }
+
+/* обёртки q-input с bg-white (пагинация и пр.) */
+.trans.bg-white {
+    background: transparent !important;
+}
+
+/* убиваем жёлтый фон полей (задавался через :bg-color) */
+.q-field .q-field__control[style*="background"] { background: var(--surface) !important; }
+
+/* --- кнопки (DivBtn — свой компонент на div) ----------------------------- */
+.button.clickable {
+    background: var(--surface) !important;
+    color: var(--fg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: var(--shadow-1) !important;
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    font-weight: 500;
+}
+.button.clickable:hover {
+    background: var(--surface-hover) !important;
+    border-color: var(--border-strong) !important;
+    transform: translateY(-1px);
+}
+.button.clickable:active { transform: translateY(0); }
+
+/* --- pagination --------------------------------------------------------- */
+.tool-panel .q-btn, .q-btn--round {
+    border-radius: 10px !important;
+    color: var(--fg-muted);
+    transition: background .15s ease, color .15s ease;
+}
+.q-btn--round { background: var(--surface) !important; border: 1px solid var(--border) !important; box-shadow: none !important; }
+.q-btn--round:hover { background: var(--surface-hover) !important; color: var(--fg) !important; }
+.q-btn--round .q-icon { font-size: 18px; }
+
+/* страница N из M */
+.tool-panel div[style*="130%"], .tool-panel .text-body2 { color: var(--fg-muted); }
+
+/* --- list rows ---------------------------------------------------------- */
+.odd-item { background: var(--row-alt) !important; }
+
+.column > .row.items-center.q-ml-md.q-mr-xs {
+    border-radius: var(--radius-md);
+    padding: 2px 10px;
+    margin: 2px 8px;
+    transition: background .14s ease, transform .14s ease;
+}
+.column > .row.items-center.q-ml-md.q-mr-xs:hover {
+    background: var(--row-hover);
+    transform: translateX(2px);
+}
+
+/* ссылки-имена авторов/серий */
+.clickable2 { color: var(--fg); }
+.clickable2.text-green-10, .text-green-10 { color: var(--fg) !important; font-weight: 600; letter-spacing: -0.005em; }
+.clickable2:hover, .clickable2:hover .text-green-10 { color: var(--accent) !important; }
+
+/* счётчики книг (inline #555) */
+[style*="color: #555"], [style*="color:#555"] {
+    color: var(--fg-faint) !important;
+    font-weight: 600 !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.text-grey-9, .text-grey-8, .text-grey-10 { color: var(--fg-muted) !important; }
+.text-grey-5, .text-grey-6 { color: var(--fg-faint) !important; }
+.text-blue-10, .text-blue-8 { color: var(--accent) !important; }
+.text-red, .text-red-10 { color: #f87171 !important; }
+
+/* строки книг */
+.book-row {
+    border-radius: var(--radius-md);
+    margin: 2px 10px;
+    padding: 4px 8px;
+    transition: background .14s ease;
+}
+.book-row:hover { background: var(--row-hover); }
+
+/* иконки-аккордеоны */
+.q-icon.la-plus-square, .q-icon.la-minus-square {
+    color: var(--fg-faint);
+    transition: color .15s ease, transform .15s ease;
+}
+.clickable2:hover .q-icon.la-plus-square,
+.clickable2:hover .q-icon.la-minus-square { color: var(--accent); }
+
+/* --- dialogs / cards ---------------------------------------------------- */
+.q-dialog__inner > .q-card, .q-menu, .q-dialog .q-card {
+    background: var(--surface-solid) !important;
+    color: var(--fg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-2) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    backdrop-filter: blur(24px) saturate(150%);
+}
+.q-dialog__title, .q-card__section { color: var(--fg) !important; }
+.q-item { border-radius: var(--radius-sm); }
+.q-item.q-item--active { background: var(--accent-soft) !important; color: var(--accent) !important; }
+.q-menu .q-item:hover { background: var(--row-hover) !important; }
+.q-separator { background: var(--border) !important; }
+.q-checkbox__inner--truthy { color: var(--accent) !important; }
+
+/* тултипы */
+.q-tooltip {
+    background: var(--surface-solid) !important;
+    color: var(--fg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: var(--shadow-1) !important;
+    font-size: 12px !important;
+}
+
+/* уведомления */
+.q-notification {
+    border-radius: var(--radius-md) !important;
+    background: var(--surface-solid) !important;
+    color: var(--fg) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-2) !important;
+}
+
+/* --- theme switch ------------------------------------------------------- */
+.theme-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--fg-muted);
+    cursor: pointer;
+    transition: color .15s ease, background .15s ease, transform .15s ease;
+}
+.theme-switch:hover { color: var(--accent); background: var(--surface-hover); transform: translateY(-1px); }
+.theme-switch .q-icon { font-size: 17px; }
+
+/* --- mobile ------------------------------------------------------------- */
+@media (max-width: 640px) {
+    body, html, #app { font: 400 13px/1.4 var(--font-ui) !important; }
+    .tool-panel .header { flex-wrap: wrap; }
+    .tool-panel .header div[style*="font-size: 150%"] { font-size: 13px !important; }
+    .q-btn-toggle .q-btn { padding: 0 11px; font-size: 12.5px; }
+    .column > .row.items-center.q-ml-md.q-mr-xs { margin: 2px 4px; padding: 2px 6px; }
+    .book-row { margin: 2px 6px; }
+}

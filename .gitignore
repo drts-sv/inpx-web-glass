@@ -1,0 +1,4 @@
+/node_modules
+/server/.inpx-web*
+/dist
+dev*.sh
