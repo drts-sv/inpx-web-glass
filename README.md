@@ -23,6 +23,7 @@
 | `client/main.js` | подключение `theme.css` и `initTheme()` |
 | `client/components/Search/Search.vue` | кнопка переключения темы; **однострочный поиск** (см. ниже); остальные поля — в раскрывающемся блоке |
 | `client/components/Search/assets/logo.png` | новая иконка книги в градиентной плашке |
+| `client/assets/fonts/*.woff2` | локальный Inter (latin + cyrillic, 400/500/600/700) — без CDN, работает офлайн |
 | `build/webpack.*.config.js` | фикс `CopyWebpackPlugin` для сборки на Windows (`from: '*'` вместо абсолютного glob) |
 
 Логика (`client/store`, `BaseList.js`, WS-протокол, `server/`) не тронута —
@@ -79,3 +80,14 @@ node server --data-dir=./data --lib-dir=/path/to/lib --inpx=/path/to/lib/coll.in
 ## Лицензия
 
 Наследуется от апстрима — см. `LICENSE.md`.
+
+## Оформление в деталях
+
+- Шапка — «плавающая пилюля» (`sticky`, отступ от краёв, `backdrop-filter`), поверх
+  скроллящегося списка.
+- На ширине ≤640px название коллекции скрывается, поле поиска и табы сжимаются,
+  пагинация уходит в одну строку — экран телефона отдаётся контенту.
+- Шрифт Inter подключён `@font-face` из `client/assets/fonts` и проходит через
+  webpack как `asset/resource`, поэтому работает без интернета.
+- Строки книг — карточки, действия в них — «пилюли»; счётчик результатов и
+  пагинация — чипы.

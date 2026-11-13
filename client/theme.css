@@ -16,6 +16,7 @@
     --bg-glow-3: rgba(236, 72, 153, 0.28);
     --surface: rgba(255, 255, 255, 0.82);
     --surface-solid: #ffffff;
+    --panel-bg: rgba(255, 255, 255, 0.9);
     --surface-hover: rgba(255, 255, 255, 0.92);
     --border: rgba(15, 23, 42, 0.11);
     --border-strong: rgba(15, 23, 42, 0.18);
@@ -44,6 +45,7 @@ body[data-theme="dark"] {
     --surface: rgba(22, 28, 45, 0.62);
     --surface-solid: #161c2d;
     --surface-hover: rgba(34, 42, 64, 0.86);
+    --panel-bg: rgba(16, 21, 36, 0.88);
     --border: rgba(255, 255, 255, 0.09);
     --border-strong: rgba(255, 255, 255, 0.16);
     --fg: #e8ecf7;
@@ -69,6 +71,7 @@ body[data-theme="dark"] {
         --surface: rgba(22, 28, 45, 0.62);
         --surface-solid: #161c2d;
         --surface-hover: rgba(34, 42, 64, 0.86);
+        --panel-bg: rgba(16, 21, 36, 0.88);
         --border: rgba(255, 255, 255, 0.09);
         --border-strong: rgba(255, 255, 255, 0.16);
         --fg: #e8ecf7;
@@ -121,7 +124,7 @@ a { color: var(--accent); }
 /* --- glass panel (шапка) -------------------------------------------------- */
 .tool-panel.bg-cyan-2,
 .tool-panel {
-    background: var(--surface) !important;
+    background: var(--panel-bg) !important;
     -webkit-backdrop-filter: blur(22px) saturate(160%);
     backdrop-filter: blur(22px) saturate(160%);
     border-bottom: 1px solid var(--border);
@@ -414,4 +417,177 @@ div.row.items-center.q-my-sm.no-wrap .clickable .q-icon { font-size: 14px; }
     .q-btn-toggle .q-btn { padding: 0 11px; font-size: 12.5px; }
     .column > .row.items-center.q-ml-md.q-mr-xs { margin: 2px 4px; padding: 2px 6px; }
     .book-row { margin: 2px 6px; }
+}
+
+/* ============================================================================
+   phase 3: локальный шрифт Inter, плавающая шапка, мобильная плотность
+   ========================================================================== */
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("./assets/fonts/inter-cyrillic-400-normal.woff2") format("woff2");
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("./assets/fonts/inter-latin-400-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("./assets/fonts/inter-cyrillic-500-normal.woff2") format("woff2");
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("./assets/fonts/inter-latin-500-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("./assets/fonts/inter-cyrillic-600-normal.woff2") format("woff2");
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("./assets/fonts/inter-latin-600-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("./assets/fonts/inter-cyrillic-700-normal.woff2") format("woff2");
+    unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("./assets/fonts/inter-latin-700-normal.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* шрифт из локальных файлов: без CDN, инстанс может быть офлайн */
+body, html, #app, .q-btn, .q-field, .q-item {
+    font-family: var(--font-ui) !important;
+}
+
+/* --- плавающая шапка ---------------------------------------------------- */
+.tool-panel {
+    top: 10px !important;
+    margin: 10px 12px 0 !important;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border) !important;
+    border-bottom: 1px solid var(--border) !important;
+    box-shadow: var(--shadow-2);
+    flex: 0 0 auto;
+}
+
+/* --- мобильная плотность ------------------------------------------------ */
+@media (max-width: 640px) {
+    .tool-panel {
+        top: 6px !important;
+        margin: 6px 6px 0 !important;
+        border-radius: var(--radius-md);
+    }
+
+    .tool-panel .header {
+        padding: 4px 2px 0;
+        gap: 4px;
+        flex-wrap: nowrap;
+    }
+
+    /* «Коллекция <название>» — в одну строку, без подписи */
+    .tool-panel .header div[style*="font-size: 150%"] {
+        font-size: 12px !important;
+        min-width: 0;
+        overflow: hidden;
+    }
+    .tool-panel .header div[style*="font-size: 150%"] > .q-mr-xs { display: none; }
+    .tool-panel .header div[style*="font-size: 150%"] > .clickable {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .q-btn-toggle { padding: 2px; }
+    .q-btn-toggle .q-btn { min-height: 26px; padding: 0 9px; font-size: 12px; }
+
+    .quick-bar { gap: 6px; margin-top: 0; }
+    .quick-input .q-field__control { height: 42px !important; }
+    .quick-input .q-field__native { font-size: 14px; }
+
+    /* строки списков компактнее */
+    .column > .row.items-center.q-ml-md.q-mr-xs {
+        margin: 2px 2px;
+        padding: 1px 4px;
+        font-size: 15px !important;
+    }
+    div.row.items-center.q-my-sm.no-wrap {
+        padding: 6px 8px;
+        flex-wrap: wrap;
+    }
+
+    .row.items-center.q-ml-lg.q-mt-sm > .text-bold {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    /* действия в строке книги не растягивают карточку */
+    div.row.items-center.q-my-sm.no-wrap .clickable {
+        padding: 1px 7px;
+        font-size: 12px;
+    }
+}
+
+/* пагинация — отдельный чип под шапкой */
+.row.items-center.q-ml-md.q-my-xs:has(.q-field) {
+    margin: 8px 12px !important;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: fit-content;
+}
+
+/* «Коллекция»: значение читаемо в обеих темах */
+.tool-panel .header .clickable { color: var(--fg); }
+.tool-panel .header .clickable:hover { color: var(--accent); }
+
+@media (max-width: 640px) {
+    /* на телефоне название коллекции убираем: экономит строку */
+    .tool-panel .header div[style*="font-size: 150%"] { display: none; }
+
+    /* пагинация в одну строку */
+    .row.items-center.q-ml-md.q-my-xs:has(.q-field) {
+        margin: 6px 8px !important;
+        padding: 2px 8px;
+        font-size: 13px !important;
+        flex-wrap: nowrap;
+        max-width: calc(100% - 16px);
+    }
+    .row.items-center.q-ml-md.q-my-xs:has(.q-field) > div { white-space: nowrap; }
+    .row.items-center.q-ml-md.q-my-xs:has(.q-field) .q-field { width: 132px !important; }
+    .row.items-center.q-ml-md.q-my-xs:has(.q-field) .q-field__native { text-align: center; }
 }
